@@ -4,6 +4,7 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER,
             autoIncrement: true,
             primaryKey: true,
+            allowNull: true,
         },
         name: {
             type: DataTypes.STRING(64),
@@ -11,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
             unique: true,
         },
         email: {
-            type: DataTypes.STRING,
+            type: DataTypes.STRING(256),
             allowNull: false,
             unique: true,
         },
@@ -21,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         rule: {
             type: DataTypes.STRING(64),
-            allowNull: false,
+            allowNull: true,
         },
     }, {
         tableName: 'users',

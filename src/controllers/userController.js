@@ -6,7 +6,8 @@ exports.getUsers = async (req, res) => {
         const users = await User.findAll();
         res.status(200).json(users);
     } catch (error) {
-        res.status(500).json({ error: 'Internal Server Error' });
+        // res.status(500).json({ error: 'Internal Server Error' });
+        res.status(500).json({ error: error });
     }
 }
 
@@ -26,11 +27,23 @@ exports.getUserById = async (req, res) => {
 exports.createUser = async (req, res) => {
     try {
         const { name, email, password, rule } = req.body;
-        const passwordHash = await bcrypt.hash(password, 10);
-        const user = await User.create({ name, email, passwordHash, rule });
-        res.status(200).json(user);
+        const hashPassword = await bcrypt.hash(password, 10);
+        // const userCreate = await User.create({ name, email, hashPassword, rule });
+        const userCreate = await User.create({
+            name: name,
+            email: email,
+            passwordHash: hashPassword,
+            rule: rule,
+        });
+        res.status(200).json(userCreate);
     } catch (error) {
-        res.status(500).json({ error: 'Internal Server Error' });
+        // res.status(500).json({ error: 'Internal Server Error' });
+        const input = req.body;
+        console.log(input);
+        const { nameIn, emailIn, passwordIn, ruleIn } = req.body;
+        const hash = await bcrypt.hash(passwordIn, 10);
+        console.log(hash);
+        res.status(500).json(error);
     }
 }
 
@@ -41,10 +54,10 @@ exports.putUser = async (req, res) => {
         if (!user) {
             res.status(404).json({ error: 'User not Found' });
         }
-        const passwordHash = await bcrypt.hash(password, 10);
+        const hashPassword = await bcrypt.hash(password, 10);
         user.name = name;
         user.email = email;
-        user.passwordHash = passwordHash;
+        user.passwordHash = hashPassword;
         user.rule = rule;
         await user.save();
         res.status(200).json(user);
